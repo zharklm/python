@@ -7,10 +7,17 @@ import os
 url = 'https://www.bitchute.com/feeds/rss/channel/rongibson/'
 r = requests.get(url, verify=False)
 root = ET.fromstring(r.text)
-for child in root[0]:
+# for child in root[0]:
+for chan in root:
     # print(child.tag, child.attrib, child.text)
+    for item in chan.findall('item'):
+        for link in item.findall('link'):
+            print(link.text)
+        for guid in item.findall('guid'):
+            print (guid.text)
     if child.tag == 'item':
-        for index, kid in enumerate(child):
+# it is kinda working like you think up to here.
+        for kid in child.iter():
             print(index, kid.tag, kid.attrib, kid.text)
             # if kid.tag == 'link':
             thetest = kid[index].tag
