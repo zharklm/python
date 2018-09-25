@@ -2,6 +2,7 @@ import requests
 import xml.etree.ElementTree as ET
 import re
 import urllib3
+import tinys3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 url = 'https://www.bitchute.com/feeds/rss/channel/rongibson/'
@@ -28,7 +29,13 @@ for chan in root:
             # problems with the cdata encoding, figure it out
             new_description = old_title
             description.text = new_description
-
+tree_out = open('ron2.rss', 'w+t')
 tree = ET.ElementTree(root)
-tree.write("output.rss", encoding="utf-8")
+tree.write(tree_out, encoding="unicode")
+tree_out.close()
+tree_bin = open('ron2.rss', 'rb')
+# tree_out.write(ET.tostring(root, encoding="unicode"))
+s3_con = tinys3.Connection('cheeky', 'bugger', tls=True)
+s3_con.upload('ron2.rss', tree_bin, 'secrets')
+tree_bin.close()
 print('I am at the end now')
