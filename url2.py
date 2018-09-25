@@ -1,5 +1,12 @@
 import requests
-from xml.etree import ElementTree as ET
-url = 'https://www.bitchute.com/embed/pcvxneAlSGZo/'
-r = requests.get(url, verify=False)
-print(r.text)
+import ffmpeg
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+url = 'https://seed07.bitchute.com/U8pFRoeI7dXM/6a3Iw7suM1TN.mp4'
+r = requests.get(url, stream=True, verify=False)
+infile = ffmpeg.input(r.content)
+outfile = ffmpeg.output(infile, 'output.mp3')
+ffmpeg.run(outfile)
+r.close()
